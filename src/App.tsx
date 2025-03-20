@@ -8,6 +8,7 @@ import Index from "./pages/Index";
 import Shop from "./pages/Shop";
 import MensWatches from "./pages/MensWatches";
 import WomensWatches from "./pages/WomensWatches";
+import NewArrivals from "./pages/NewArrivals";
 import ProductDetail from "./pages/ProductDetail";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
@@ -28,6 +29,7 @@ const App = () => (
           <Route path="/shop" element={<Shop />} />
           <Route path="/mens-watches" element={<MensWatches />} />
           <Route path="/womens-watches" element={<WomensWatches />} />
+          <Route path="/new-arrivals" element={<NewArrivals />} />
           <Route path="/product/:slug" element={<ProductDetail />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
