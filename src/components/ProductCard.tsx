@@ -20,9 +20,10 @@ export interface Product {
 interface ProductCardProps {
   product: Product;
   variant?: 'default' | 'featured';
+  detailUrl?: string;
 }
 
-const ProductCard = ({ product, variant = 'default' }: ProductCardProps) => {
+const ProductCard = ({ product, variant = 'default', detailUrl }: ProductCardProps) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
   
@@ -50,6 +51,9 @@ const ProductCard = ({ product, variant = 'default' }: ProductCardProps) => {
       }).format(product.originalPrice)
     : null;
 
+  // Use the provided detailUrl or fallback to the default product slug path
+  const productUrl = detailUrl || `/product/${product.slug}`;
+
   return (
     <div className={cn(
       "group",
@@ -61,7 +65,7 @@ const ProductCard = ({ product, variant = 'default' }: ProductCardProps) => {
         onMouseLeave={handleMouseLeave}
       >
         {/* Product Image */}
-        <Link to={`/products/${product.slug}`}>
+        <Link to={productUrl}>
           <div className="relative aspect-[3/4] overflow-hidden bg-mvmt-gray-100">
             <img
               src={product.images[currentImageIndex]}
@@ -138,7 +142,7 @@ const ProductCard = ({ product, variant = 'default' }: ProductCardProps) => {
         "mt-3 text-center",
         variant === 'featured' ? 'px-1' : ''
       )}>
-        <Link to={`/products/${product.slug}`}>
+        <Link to={productUrl}>
           <h3 className="text-base font-medium leading-tight text-mvmt-black transition-colors duration-300 hover:text-mvmt-gray-600">
             {product.name}
           </h3>
