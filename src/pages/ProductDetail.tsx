@@ -1,22 +1,26 @@
 
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
-import { ChevronRight, Minus, Plus, Heart } from "lucide-react";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import { ChevronRight, Minus, Plus, Heart, ShoppingCart } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Product } from "@/components/ProductCard";
-import { toast } from "@/components/ui/use-toast";
+import { useCart } from "@/contexts/CartContext";
+import { Button } from "@/components/ui/button";
 
 // This would typically come from an API, using the same mock data for now
 import { productsData } from "@/data/products";
 
 const ProductDetail = () => {
   const { slug } = useParams();
+  const navigate = useNavigate();
+  const { addItem } = useCart();
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [quantity, setQuantity] = useState(1);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [isAddingToCart, setIsAddingToCart] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -45,21 +49,34 @@ const ProductDetail = () => {
   const addToCart = () => {
     if (!product) return;
     
-    toast({
-      title: "Added to Cart",
-      description: `${quantity} x ${product.name} added to your cart`,
-      duration: 3000,
-    });
+    setIsAddingToCart(true);
+    
+    // Simulate a small delay for better UX
+    setTimeout(() => {
+      addItem(product, quantity, selectedColor);
+      setIsAddingToCart(false);
+    }, 500);
+  };
+
+  const buyNow = () => {
+    if (!product) return;
+    
+    setIsAddingToCart(true);
+    
+    // Add to cart then navigate to cart
+    setTimeout(() => {
+      addItem(product, quantity, selectedColor);
+      setIsAddingToCart(false);
+      navigate('/cart');
+    }, 500);
   };
 
   const addToWishlist = () => {
     if (!product) return;
     
-    toast({
-      title: "Added to Wishlist",
-      description: `${product.name} has been added to your wishlist`,
-      duration: 3000,
-    });
+    // We would normally add to a wishlist here
+    // For now, just show a toast via the addItem's toast
+    addItem(product, 0, selectedColor);
   };
 
   if (loading) {
@@ -83,9 +100,12 @@ const ProductDetail = () => {
           <p className="text-mvmt-gray-600 mb-6">
             The product you're looking for doesn't exist or has been removed.
           </p>
-          <Link to="/shop" className="mvmt-button-primary">
+          <Button 
+            onClick={() => navigate('/shop')}
+            className="bg-mvmt-black hover:bg-mvmt-gray-800"
+          >
             Continue Shopping
-          </Link>
+          </Button>
         </main>
         <Footer />
       </div>
@@ -227,19 +247,35 @@ const ProductDetail = () => {
                 
                 {/* Add to Cart Button */}
                 <div className="pt-4 space-y-3">
-                  <button
+                  <Button
                     onClick={addToCart}
-                    className="w-full bg-mvmt-black text-white font-medium py-3 px-6 transition-colors duration-300 hover:bg-mvmt-gray-800 focus:outline-none focus:ring-2 focus:ring-mvmt-black focus:ring-offset-2"
+                    disabled={isAddingToCart}
+                    className="w-full bg-mvmt-black text-white font-medium py-3 px-6 h-12 transition-colors duration-300 hover:bg-mvmt-gray-800 flex items-center justify-center"
                   >
-                    Add to Cart
-                  </button>
+                    {isAddingToCart ? 'Adding...' : (
+                      <>
+                        <ShoppingCart className="mr-2 h-4 w-4" />
+                        Add to Cart
+                      </>
+                    )}
+                  </Button>
                   
-                  <button
-                    onClick={addToWishlist}
-                    className="w-full border border-mvmt-gray-300 text-mvmt-black font-medium py-3 px-6 flex items-center justify-center transition-colors duration-300 hover:bg-mvmt-gray-100 focus:outline-none focus:ring-2 focus:ring-mvmt-black focus:ring-offset-2"
+                  <Button
+                    onClick={buyNow}
+                    disabled={isAddingToCart}
+                    variant="outline"
+                    className="w-full border border-mvmt-gray-300 text-mvmt-black font-medium py-3 px-6 h-12"
                   >
-                    <Heart className="h-4 w-4 mr-2" /> Add to Wishlist
-                  </button>
+                    Buy Now
+                  </Button>
+                  
+                  <Button
+                    onClick={addToWishlist}
+                    variant="ghost"
+                    className="w-full text-mvmt-black font-medium py-3 px-6 h-12 flex items-center justify-center"
+                  >
+                    <Heart className="mr-2 h-4 w-4" /> Add to Wishlist
+                  </Button>
                 </div>
               </div>
               
@@ -248,7 +284,7 @@ const ProductDetail = () => {
                 <h3 className="text-lg font-semibold mb-3">Description</h3>
                 <p className="text-mvmt-gray-600">
                   The {product.name} features a sleek {
-                    product.colorOptions.find(c => c.color === selectedColor)?.name.toLowerCase()
+                    product.colorOptions?.find(c => c.color === selectedColor)?.name.toLowerCase()
                   } design with premium materials and precise movement. This timepiece is perfect for everyday wear or special occasions, matching seamlessly with any outfit.
                 </p>
               </div>
