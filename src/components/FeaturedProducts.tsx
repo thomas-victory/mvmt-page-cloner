@@ -81,6 +81,7 @@ const FeaturedProducts = ({
                 <ProductCard 
                   key={product.id}
                   product={product}
+                  detailUrl={`/product/${product.slug}`}
                 />
               ))}
             </div>
