@@ -17,6 +17,27 @@ import Payment from "./pages/Payment";
 import OrderConfirmation from "./pages/OrderConfirmation";
 import NotFound from "./pages/NotFound";
 
+// Footer Navigation Pages
+import MensSunglasses from "./pages/MensSunglasses";
+import WomensSunglasses from "./pages/WomensSunglasses";
+import Jewelry from "./pages/Jewelry";
+import MensJewelry from "./pages/MensJewelry";
+import WomensJewelry from "./pages/WomensJewelry";
+import GiftCards from "./pages/GiftCards";
+import OurStory from "./pages/OurStory";
+import Reviews from "./pages/Reviews";
+import Careers from "./pages/Careers";
+import Press from "./pages/Press";
+import Blog from "./pages/Blog";
+import FAQ from "./pages/FAQ";
+import ShippingReturns from "./pages/ShippingReturns";
+import Warranty from "./pages/Warranty";
+import Contact from "./pages/Contact";
+import TrackOrder from "./pages/TrackOrder";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
+import Accessibility from "./pages/Accessibility";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -37,6 +58,28 @@ const App = () => (
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/payment" element={<Payment />} />
           <Route path="/order-confirmation" element={<OrderConfirmation />} />
+          
+          {/* Footer Navigation Pages */}
+          <Route path="/mens-sunglasses" element={<MensSunglasses />} />
+          <Route path="/womens-sunglasses" element={<WomensSunglasses />} />
+          <Route path="/jewelry" element={<Jewelry />} />
+          <Route path="/mens-jewelry" element={<MensJewelry />} />
+          <Route path="/womens-jewelry" element={<WomensJewelry />} />
+          <Route path="/gift-cards" element={<GiftCards />} />
+          <Route path="/our-story" element={<OurStory />} />
+          <Route path="/reviews" element={<Reviews />} />
+          <Route path="/careers" element={<Careers />} />
+          <Route path="/press" element={<Press />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/faq" element={<FAQ />} />
+          <Route path="/shipping-returns" element={<ShippingReturns />} />
+          <Route path="/warranty" element={<Warranty />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/track-order" element={<TrackOrder />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-of-service" element={<TermsOfService />} />
+          <Route path="/accessibility" element={<Accessibility />} />
+          
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
