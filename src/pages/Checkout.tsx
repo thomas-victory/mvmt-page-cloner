@@ -1,7 +1,6 @@
-
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Check, ChevronRight } from 'lucide-react';
+import { Check, ChevronRight, Lock, ShieldCheck, CreditCard } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useCart } from '@/contexts/CartContext';
@@ -22,8 +21,8 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 
-// Form schema validation
 const checkoutFormSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
   firstName: z.string().min(2, { message: "First name must be at least 2 characters" }),
@@ -47,13 +46,11 @@ const Checkout = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   
-  // Shipping costs
   const shippingCosts = {
     standard: 0,
     express: 12.99,
   };
   
-  // Initial form values
   const defaultValues: Partial<CheckoutFormValues> = {
     shippingMethod: "standard",
   };
@@ -63,13 +60,11 @@ const Checkout = () => {
     defaultValues,
   });
   
-  // Calculated totals
   const selectedShippingMethod = form.watch("shippingMethod") || "standard";
   const shipping = shippingCosts[selectedShippingMethod as keyof typeof shippingCosts];
-  const tax = subtotal * 0.0825; // 8.25% sales tax
+  const tax = subtotal * 0.0825;
   const total = subtotal + shipping + tax;
   
-  // Format price utility
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -77,13 +72,10 @@ const Checkout = () => {
     }).format(price);
   };
   
-  // Form submission handler
   const onSubmit = (data: CheckoutFormValues) => {
     setIsSubmitting(true);
     
-    // Simulate API call delay
     setTimeout(() => {
-      // Save shipping info to session storage for the payment page
       sessionStorage.setItem('mvmt-shipping-info', JSON.stringify(data));
       sessionStorage.setItem('mvmt-order-summary', JSON.stringify({
         subtotal,
@@ -98,7 +90,6 @@ const Checkout = () => {
     }, 1000);
   };
   
-  // If cart is empty, redirect to cart page
   if (items.length === 0) {
     navigate('/cart');
     return null;
@@ -110,7 +101,6 @@ const Checkout = () => {
       
       <main className="flex-grow pt-24 pb-16">
         <div className="mvmt-container max-w-6xl">
-          {/* Checkout Progress Bar */}
           <div className="flex items-center mb-12">
             <div className="flex items-center">
               <div className="w-8 h-8 rounded-full bg-mvmt-black text-white flex items-center justify-center">
@@ -137,7 +127,6 @@ const Checkout = () => {
           <h1 className="text-2xl font-semibold mb-8">Shipping Information</h1>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
-            {/* Shipping Form */}
             <div className="md:col-span-2">
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -329,6 +318,51 @@ const Checkout = () => {
                     />
                   </div>
                   
+                  <Card className="border-mvmt-gray-200 mt-6">
+                    <CardHeader className="pb-3">
+                      <CardTitle className="text-lg flex items-center">
+                        <ShieldCheck className="h-5 w-5 text-green-600 mr-2" />
+                        Secure Checkout Promise
+                      </CardTitle>
+                      <CardDescription>
+                        Your information is protected with industry-standard encryption
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="flex flex-col gap-4">
+                        <div className="flex items-center gap-2">
+                          <Lock className="h-4 w-4 text-mvmt-gray-500" />
+                          <p className="text-sm text-mvmt-gray-600">100% secure payment processing</p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <CreditCard className="h-4 w-4 text-mvmt-gray-500" />
+                          <p className="text-sm text-mvmt-gray-600">Your card details are never stored</p>
+                        </div>
+                        
+                        <div>
+                          <p className="text-sm text-mvmt-gray-600 mb-2">We accept:</p>
+                          <div className="flex flex-wrap gap-3">
+                            <div className="h-8 w-12 bg-white border border-mvmt-gray-200 rounded flex items-center justify-center">
+                              <img src="/visa.svg" alt="Visa" className="h-4" onError={(e) => { e.currentTarget.src = "/placeholder.svg" }} />
+                            </div>
+                            <div className="h-8 w-12 bg-white border border-mvmt-gray-200 rounded flex items-center justify-center">
+                              <img src="/mastercard.svg" alt="Mastercard" className="h-4" onError={(e) => { e.currentTarget.src = "/placeholder.svg" }} />
+                            </div>
+                            <div className="h-8 w-12 bg-white border border-mvmt-gray-200 rounded flex items-center justify-center">
+                              <img src="/amex.svg" alt="American Express" className="h-4" onError={(e) => { e.currentTarget.src = "/placeholder.svg" }} />
+                            </div>
+                            <div className="h-8 w-12 bg-white border border-mvmt-gray-200 rounded flex items-center justify-center">
+                              <img src="/paypal.svg" alt="PayPal" className="h-4" onError={(e) => { e.currentTarget.src = "/placeholder.svg" }} />
+                            </div>
+                            <div className="h-8 w-12 bg-white border border-mvmt-gray-200 rounded flex items-center justify-center">
+                              <img src="/applepay.svg" alt="Apple Pay" className="h-4" onError={(e) => { e.currentTarget.src = "/placeholder.svg" }} />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                  
                   <div className="pt-4">
                     <Button 
                       type="submit" 
@@ -342,7 +376,6 @@ const Checkout = () => {
               </Form>
             </div>
             
-            {/* Order Summary */}
             <div className="bg-mvmt-gray-50 p-6 h-fit">
               <h2 className="text-xl font-semibold mb-6">Order Summary</h2>
               
@@ -399,6 +432,17 @@ const Checkout = () => {
                 <div className="flex justify-between text-lg font-semibold">
                   <span>Total</span>
                   <span>{formatPrice(total)}</span>
+                </div>
+              </div>
+              
+              <div className="mt-6 pt-4 border-t border-mvmt-gray-200">
+                <div className="flex justify-center gap-2 mb-3">
+                  <ShieldCheck className="h-5 w-5 text-green-600" />
+                  <span className="text-sm font-medium">Guaranteed Safe Checkout</span>
+                </div>
+                <div className="flex justify-center gap-2 items-center text-mvmt-gray-600 text-xs mt-2">
+                  <Lock className="h-3 w-3" />
+                  <span>SSL SECURED PAYMENT</span>
                 </div>
               </div>
             </div>
