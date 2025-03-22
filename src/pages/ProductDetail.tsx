@@ -1,12 +1,12 @@
-
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { ChevronRight, Minus, Plus, Heart, ShoppingCart } from "lucide-react";
+import { ChevronRight, Minus, Plus, Heart, ShoppingCart, Star } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Product } from "@/components/ProductCard";
 import { useCart } from "@/contexts/CartContext";
 import { Button } from "@/components/ui/button";
+import ReviewCard from "@/components/ReviewCard";
 
 // This would typically come from an API, using the same mock data for now
 import { productsData } from "@/data/products";
@@ -78,6 +78,14 @@ const ProductDetail = () => {
     // For now, just show a toast via the addItem's toast
     addItem(product, 0, selectedColor);
   };
+
+  const calculateAverageRating = (reviews?: { rating: number }[]) => {
+    if (!reviews || reviews.length === 0) return 0;
+    const sum = reviews.reduce((total, review) => total + review.rating, 0);
+    return (sum / reviews.length).toFixed(1);
+  };
+
+  const averageRating = calculateAverageRating(product?.reviews);
 
   if (loading) {
     return (
@@ -172,6 +180,27 @@ const ProductDetail = () => {
             {/* Product Info */}
             <div className="flex flex-col">
               <h1 className="text-3xl font-semibold text-mvmt-black">{product.name}</h1>
+              
+              {/* Average Rating */}
+              {product.reviews && product.reviews.length > 0 && (
+                <div className="flex items-center mt-2">
+                  <div className="flex items-center">
+                    {Array.from({ length: 5 }).map((_, index) => (
+                      <Star
+                        key={index}
+                        className={`h-4 w-4 ${
+                          index < Math.round(Number(averageRating))
+                            ? "text-amber-400 fill-amber-400"
+                            : "text-mvmt-gray-300"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <span className="ml-2 text-sm text-mvmt-gray-600">
+                    {averageRating} ({product.reviews.length} {product.reviews.length === 1 ? 'review' : 'reviews'})
+                  </span>
+                </div>
+              )}
               
               <div className="mt-4 flex items-baseline">
                 <span className="text-xl font-semibold">${product.price}</span>
@@ -299,6 +328,53 @@ const ProductDetail = () => {
                 </ul>
               </div>
             </div>
+          </div>
+          
+          {/* Reviews Section */}
+          <div className="mt-16 border-t border-mvmt-gray-200 pt-12">
+            <h2 className="text-2xl font-semibold mb-8">Customer Reviews</h2>
+            
+            {product.reviews && product.reviews.length > 0 ? (
+              <div>
+                <div className="flex items-center mb-6">
+                  <div className="flex items-center">
+                    {Array.from({ length: 5 }).map((_, index) => (
+                      <Star
+                        key={index}
+                        className={`h-5 w-5 ${
+                          index < Math.round(Number(averageRating))
+                            ? "text-amber-400 fill-amber-400"
+                            : "text-mvmt-gray-300"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                  <span className="ml-3 text-lg font-medium">
+                    {averageRating} out of 5
+                  </span>
+                  <span className="ml-2 text-mvmt-gray-600">
+                    Based on {product.reviews.length} {product.reviews.length === 1 ? 'review' : 'reviews'}
+                  </span>
+                </div>
+                
+                <div className="space-y-0">
+                  {product.reviews.map((review) => (
+                    <ReviewCard key={review.id} review={review} />
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <div className="text-center py-10 bg-mvmt-gray-50 rounded-lg">
+                <h3 className="text-lg font-medium mb-2">No Reviews Yet</h3>
+                <p className="text-mvmt-gray-600 mb-4">Be the first to review this product</p>
+                <Button
+                  variant="outline"
+                  className="border border-mvmt-gray-300 text-mvmt-black font-medium"
+                >
+                  Write a Review
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </main>

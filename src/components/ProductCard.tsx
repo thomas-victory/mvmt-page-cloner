@@ -1,8 +1,8 @@
-
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { Heart } from 'lucide-react';
+import { Review } from '@/types/Review';
 
 export interface Product {
   id: string;
@@ -15,6 +15,7 @@ export interface Product {
   isBestseller?: boolean;
   slug: string;
   colorOptions?: { name: string; color: string }[];
+  reviews?: Review[];
 }
 
 interface ProductCardProps {
@@ -51,7 +52,6 @@ const ProductCard = ({ product, variant = 'default', detailUrl }: ProductCardPro
       }).format(product.originalPrice)
     : null;
 
-  // Use the provided detailUrl or fallback to the default product slug path
   const productUrl = detailUrl || `/product/${product.slug}`;
 
   return (
@@ -64,7 +64,6 @@ const ProductCard = ({ product, variant = 'default', detailUrl }: ProductCardPro
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
       >
-        {/* Product Image */}
         <Link to={productUrl}>
           <div className="relative aspect-[3/4] overflow-hidden bg-mvmt-gray-100">
             <img
@@ -76,7 +75,6 @@ const ProductCard = ({ product, variant = 'default', detailUrl }: ProductCardPro
               )}
             />
             
-            {/* Product Badges */}
             <div className="absolute top-3 left-3 flex flex-col gap-2">
               {product.isNew && (
                 <span className="inline-block bg-mvmt-black text-white text-xs px-2.5 py-1 font-medium">
@@ -97,7 +95,6 @@ const ProductCard = ({ product, variant = 'default', detailUrl }: ProductCardPro
           </div>
         </Link>
 
-        {/* Quick Add to Wishlist */}
         <button 
           className={cn(
             "absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-sm rounded-full shadow-sm transition-all duration-300",
@@ -108,7 +105,6 @@ const ProductCard = ({ product, variant = 'default', detailUrl }: ProductCardPro
           <Heart className="h-5 w-5 text-mvmt-gray-700 hover:text-red-500 transition-colors duration-300" />
         </button>
 
-        {/* Quick Add to Cart (for featured products) */}
         {variant === 'featured' && (
           <div 
             className={cn(
@@ -123,7 +119,6 @@ const ProductCard = ({ product, variant = 'default', detailUrl }: ProductCardPro
         )}
       </div>
 
-      {/* Color Options */}
       {product.colorOptions && product.colorOptions.length > 0 && (
         <div className="flex justify-center space-x-2 mt-3">
           {product.colorOptions.map((colorOpt, index) => (
@@ -137,7 +132,6 @@ const ProductCard = ({ product, variant = 'default', detailUrl }: ProductCardPro
         </div>
       )}
 
-      {/* Product Details */}
       <div className={cn(
         "mt-3 text-center",
         variant === 'featured' ? 'px-1' : ''
