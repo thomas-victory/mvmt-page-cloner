@@ -1,7 +1,7 @@
 
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ChevronRight, Minus, Plus, X, ShoppingBag } from 'lucide-react';
+import { ChevronRight, Minus, Plus, X, ShoppingBag, CreditCard, Lock, ShieldCheck } from 'lucide-react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import { useCart } from '@/contexts/CartContext';
@@ -122,6 +122,47 @@ const Cart = () => {
                     </div>
                   </div>
                 ))}
+
+                {/* Trust Payment Section - Only show when cart has items */}
+                <div className="mt-8 border border-mvmt-gray-200 rounded-md p-6 bg-white">
+                  <div className="flex items-center gap-2 mb-4">
+                    <ShieldCheck className="h-5 w-5 text-green-600" />
+                    <h3 className="font-medium">Secure Checkout</h3>
+                  </div>
+                  
+                  <div className="flex flex-col gap-4">
+                    <div className="flex items-center gap-2">
+                      <Lock className="h-4 w-4 text-mvmt-gray-500" />
+                      <p className="text-sm text-mvmt-gray-600">Your payment information is encrypted and secure</p>
+                    </div>
+                    
+                    <div>
+                      <p className="text-sm text-mvmt-gray-600 mb-2">We accept:</p>
+                      <div className="flex flex-wrap gap-3">
+                        <div className="h-8 w-12 bg-white border border-mvmt-gray-200 rounded flex items-center justify-center">
+                          <img src="/visa.svg" alt="Visa" className="h-4" onError={(e) => { e.currentTarget.src = "/placeholder.svg" }} />
+                        </div>
+                        <div className="h-8 w-12 bg-white border border-mvmt-gray-200 rounded flex items-center justify-center">
+                          <img src="/mastercard.svg" alt="Mastercard" className="h-4" onError={(e) => { e.currentTarget.src = "/placeholder.svg" }} />
+                        </div>
+                        <div className="h-8 w-12 bg-white border border-mvmt-gray-200 rounded flex items-center justify-center">
+                          <img src="/amex.svg" alt="American Express" className="h-4" onError={(e) => { e.currentTarget.src = "/placeholder.svg" }} />
+                        </div>
+                        <div className="h-8 w-12 bg-white border border-mvmt-gray-200 rounded flex items-center justify-center">
+                          <img src="/paypal.svg" alt="PayPal" className="h-4" onError={(e) => { e.currentTarget.src = "/placeholder.svg" }} />
+                        </div>
+                        <div className="h-8 w-12 bg-white border border-mvmt-gray-200 rounded flex items-center justify-center">
+                          <img src="/applepay.svg" alt="Apple Pay" className="h-4" onError={(e) => { e.currentTarget.src = "/placeholder.svg" }} />
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-2">
+                      <CreditCard className="h-4 w-4 text-mvmt-gray-500" />
+                      <p className="text-sm text-mvmt-gray-600">Your credit card details are never stored</p>
+                    </div>
+                  </div>
+                </div>
               </div>
               
               {/* Order Summary - Takes up 1/3 of the space on desktop */}
@@ -166,6 +207,18 @@ const Cart = () => {
                     >
                       Continue Shopping
                     </Link>
+                  </div>
+
+                  {/* Trust badges */}
+                  <div className="mt-4 pt-4 border-t border-mvmt-gray-200">
+                    <div className="flex justify-center gap-2 mb-3">
+                      <ShieldCheck className="h-5 w-5 text-green-600" />
+                      <span className="text-sm font-medium">Guaranteed Safe Checkout</span>
+                    </div>
+                    <div className="flex justify-center gap-2 items-center text-mvmt-gray-600 text-xs mt-2">
+                      <Lock className="h-3 w-3" />
+                      <span>SSL SECURED PAYMENT</span>
+                    </div>
                   </div>
                 </div>
               </div>
