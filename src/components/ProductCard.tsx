@@ -1,9 +1,10 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { Heart, Timer } from 'lucide-react';
 import { Review } from '@/types/Review';
+import { Progress } from '@/components/ui/progress';
 
 export interface Product {
   id: string;
@@ -29,6 +30,35 @@ interface ProductCardProps {
 const ProductCard = ({ product, variant = 'default', detailUrl }: ProductCardProps) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
+  const [timeLeft, setTimeLeft] = useState<number | null>(null);
+  const [progressValue, setProgressValue] = useState(100);
+  
+  useEffect(() => {
+    if (!product.saleEndsAt) return;
+    
+    const calculateTimeLeft = () => {
+      const now = new Date().getTime();
+      const endTime = new Date(product.saleEndsAt!).getTime();
+      const totalDuration = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+      
+      const timeRemaining = endTime - now;
+      
+      if (timeRemaining <= 0) {
+        setTimeLeft(null);
+        return;
+      }
+      
+      // Calculate progress as percentage of time remaining
+      const progress = Math.min(100, Math.max(0, (timeRemaining / totalDuration) * 100));
+      setProgressValue(progress);
+      setTimeLeft(timeRemaining);
+    };
+    
+    calculateTimeLeft();
+    const timerId = setInterval(calculateTimeLeft, 1000);
+    
+    return () => clearInterval(timerId);
+  }, [product.saleEndsAt]);
   
   const handleMouseEnter = () => {
     setIsHovering(true);
@@ -60,6 +90,17 @@ const ProductCard = ({ product, variant = 'default', detailUrl }: ProductCardPro
     : 0;
 
   const productUrl = detailUrl || `/product/${product.slug}`;
+
+  // Format time left for display
+  const formatTimeLeft = () => {
+    if (!timeLeft) return '';
+    
+    const hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
+    const minutes = Math.floor((timeLeft / 1000 / 60) % 60);
+    const seconds = Math.floor((timeLeft / 1000) % 60);
+    
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+  };
 
   return (
     <div className={cn(
@@ -100,11 +141,20 @@ const ProductCard = ({ product, variant = 'default', detailUrl }: ProductCardPro
               )}
             </div>
             
-            {/* Sale countdown timer indicator */}
-            {product.saleEndsAt && (
-              <div className="absolute bottom-3 left-3 right-3 bg-black/70 backdrop-blur-sm text-white text-xs px-2.5 py-1.5 font-medium flex items-center">
-                <Timer className="h-3.5 w-3.5 mr-1.5" />
-                <span>Limited time offer</span>
+            {/* Sale countdown progress bar */}
+            {product.saleEndsAt && timeLeft && (
+              <div className="absolute bottom-3 left-3 right-3 bg-black/70 backdrop-blur-sm text-white text-xs px-2.5 py-2 font-medium">
+                <div className="flex items-center justify-between mb-1.5">
+                  <div className="flex items-center">
+                    <Timer className="h-3.5 w-3.5 mr-1.5" />
+                    <span>Sale ends in</span>
+                  </div>
+                  <span className="font-mono">{formatTimeLeft()}</span>
+                </div>
+                <Progress 
+                  value={progressValue} 
+                  className="h-1.5 bg-gray-600" 
+                />
               </div>
             )}
           </div>
