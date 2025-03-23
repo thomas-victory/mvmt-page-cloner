@@ -6,199 +6,15 @@ import Footer from "@/components/Footer";
 import ProductCard, { Product } from "@/components/ProductCard";
 import { ChevronDown, Filter, X } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-const productsData = [
-  {
-    id: "1",
-    name: "Classic Black",
-    price: 138,
-    images: [
-      "https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1619134778706-7015b6640850?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
-    ],
-    category: "men",
-    isBestseller: true,
-    slug: "classic-black",
-    colorOptions: [
-      { name: "Black", color: "#000000" },
-      { name: "Silver", color: "#c0c0c0" }
-    ]
-  },
-  // ... (including all 8 products from the Index page)
-  {
-    id: "2",
-    name: "Nova Series",
-    price: 158,
-    images: [
-      "https://images.unsplash.com/photo-1549972574-8e3e1ed6a347?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1524592094714-0f0654e20314?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
-    ],
-    category: "men",
-    isNew: true,
-    slug: "nova-series",
-    colorOptions: [
-      { name: "Blue", color: "#354F6B" },
-      { name: "Black", color: "#000000" }
-    ]
-  },
-  {
-    id: "3",
-    name: "Voyager Minimalist",
-    price: 145,
-    originalPrice: 175,
-    images: [
-      "https://images.unsplash.com/photo-1539874754764-5a96559165b0?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1533139502658-0198f920d8e8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
-    ],
-    category: "men",
-    slug: "voyager-minimalist",
-    colorOptions: [
-      { name: "Brown", color: "#8B572A" },
-      { name: "Black", color: "#000000" }
-    ]
-  },
-  {
-    id: "4",
-    name: "Eclipse Rose Gold",
-    price: 168,
-    images: [
-      "https://images.unsplash.com/photo-1548169874-53e85f753f1e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1518131672697-613becd4fab5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
-    ],
-    category: "women",
-    isBestseller: true,
-    slug: "eclipse-rose-gold",
-    colorOptions: [
-      { name: "Rose Gold", color: "#B76E79" },
-      { name: "Gold", color: "#D4AF37" }
-    ]
-  },
-  {
-    id: "5",
-    name: "Luna Mesh",
-    price: 148,
-    images: [
-      "https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
-    ],
-    category: "women",
-    isNew: true,
-    slug: "luna-mesh",
-    colorOptions: [
-      { name: "Silver", color: "#C0C0C0" },
-      { name: "Gold", color: "#D4AF37" }
-    ]
-  },
-  {
-    id: "6",
-    name: "Stellar Diamond",
-    price: 195,
-    originalPrice: 225,
-    images: [
-      "https://images.unsplash.com/photo-1612817159949-195b6eb9e31a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1537217547330-11f21d69ccae?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
-    ],
-    category: "women",
-    slug: "stellar-diamond",
-    colorOptions: [
-      { name: "White", color: "#FFFFFF" },
-      { name: "Black", color: "#000000" }
-    ]
-  },
-  {
-    id: "7",
-    name: "Meridian Chronograph",
-    price: 180,
-    images: [
-      "https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1434056886845-dac89ffe9b56?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
-    ],
-    category: "men",
-    slug: "meridian-chronograph",
-    colorOptions: [
-      { name: "Silver", color: "#C0C0C0" },
-      { name: "Black", color: "#000000" }
-    ]
-  },
-  {
-    id: "8",
-    name: "Solstice Gold",
-    price: 178,
-    images: [
-      "https://images.unsplash.com/photo-1548169874-53e85f753f1e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1518131672697-613becd4fab5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80"
-    ],
-    category: "women",
-    slug: "solstice-gold",
-    colorOptions: [
-      { name: "Gold", color: "#D4AF37" },
-      { name: "Rose Gold", color: "#B76E79" }
-    ]
-  },
-  // Additional products for the shop page
-  {
-    id: "9",
-    name: "Apex Chrono",
-    price: 195,
-    images: [
-      "https://images.unsplash.com/photo-1614164185128-e4ec99c436d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1619134778706-7015b6640850?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-    ],
-    category: "men",
-    isNew: true,
-    slug: "apex-chrono",
-    colorOptions: [
-      { name: "Silver", color: "#C0C0C0" },
-      { name: "Black", color: "#000000" }
-    ]
-  },
-  {
-    id: "10",
-    name: "Aurora Mesh",
-    price: 128,
-    images: [
-      "https://images.unsplash.com/photo-1524592094714-0f0654e20314?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1522312346375-d1a52e2b99b3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-    ],
-    category: "women",
-    slug: "aurora-mesh",
-    colorOptions: [
-      { name: "Gold", color: "#D4AF37" },
-      { name: "Rose Gold", color: "#B76E79" }
-    ]
-  },
-  {
-    id: "11",
-    name: "Quantum Black",
-    price: 158,
-    images: [
-      "https://images.unsplash.com/photo-1533139502658-0198f920d8e8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-    ],
-    category: "men",
-    slug: "quantum-black",
-    colorOptions: [
-      { name: "Black", color: "#000000" },
-      { name: "Brown", color: "#8B572A" }
-    ]
-  },
-  {
-    id: "12",
-    name: "Celestial Rose",
-    price: 168,
-    originalPrice: 188,
-    images: [
-      "https://images.unsplash.com/photo-1537217547330-11f21d69ccae?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1612817159949-195b6eb9e31a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-    ],
-    category: "women",
-    slug: "celestial-rose",
-    colorOptions: [
-      { name: "Rose Gold", color: "#B76E79" },
-      { name: "Gold", color: "#D4AF37" }
-    ]
-  },
-];
+import { productsData } from "@/data/products";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 
 type FilterState = {
   category: string;
@@ -210,7 +26,7 @@ type FilterState = {
 }
 
 const Shop = () => {
-  const [products, setProducts] = useState<Product[]>(productsData);
+  const [products, setProducts] = useState<Product[]>([]);
   const [filters, setFilters] = useState<FilterState>({
     category: 'all',
     priceRange: [0, 500],
@@ -222,49 +38,72 @@ const Shop = () => {
   const [isFilterMenuOpen, setIsFilterMenuOpen] = useState(false);
   const [expandedFilter, setExpandedFilter] = useState<string | null>("category");
   
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const productsPerPage = 6;
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [totalPages, setTotalPages] = useState(1);
+  
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
   
   useEffect(() => {
-    let filteredProducts = [...productsData];
+    let filtered = [...productsData];
     
     // Filter by category
     if (filters.category !== 'all') {
-      filteredProducts = filteredProducts.filter(p => p.category === filters.category);
+      filtered = filtered.filter(p => p.category === filters.category);
     }
     
     // Filter by price range
-    filteredProducts = filteredProducts.filter(
+    filtered = filtered.filter(
       p => p.price >= filters.priceRange[0] && p.price <= filters.priceRange[1]
     );
     
     // Filter by new arrivals
     if (filters.newArrivals) {
-      filteredProducts = filteredProducts.filter(p => p.isNew);
+      filtered = filtered.filter(p => p.isNew);
     }
     
     // Filter by bestsellers
     if (filters.bestsellers) {
-      filteredProducts = filteredProducts.filter(p => p.isBestseller);
+      filtered = filtered.filter(p => p.isBestseller);
     }
     
     // Filter by sale items
     if (filters.sale) {
-      filteredProducts = filteredProducts.filter(p => p.originalPrice);
+      filtered = filtered.filter(p => p.originalPrice);
     }
     
     // Sort products
     if (filters.sort === 'price-low-high') {
-      filteredProducts.sort((a, b) => a.price - b.price);
+      filtered.sort((a, b) => a.price - b.price);
     } else if (filters.sort === 'price-high-low') {
-      filteredProducts.sort((a, b) => b.price - a.price);
+      filtered.sort((a, b) => b.price - a.price);
     } else if (filters.sort === 'newest') {
-      filteredProducts.sort((a, b) => (a.isNew === b.isNew) ? 0 : a.isNew ? -1 : 1);
+      filtered.sort((a, b) => (a.isNew === b.isNew) ? 0 : a.isNew ? -1 : 1);
     }
     
-    setProducts(filteredProducts);
+    setFilteredProducts(filtered);
+    setTotalPages(Math.ceil(filtered.length / productsPerPage));
+    setCurrentPage(1); // Reset to first page when filters change
   }, [filters]);
+  
+  // Update displayed products when page changes or filtered products change
+  useEffect(() => {
+    const indexOfLastProduct = currentPage * productsPerPage;
+    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+    const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct);
+    setProducts(currentProducts);
+    
+    // Scroll to top when page changes
+    window.scrollTo(0, 0);
+  }, [currentPage, filteredProducts]);
+  
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
   
   const toggleFilter = (filterName: string) => {
     setExpandedFilter(expandedFilter === filterName ? null : filterName);
@@ -287,6 +126,86 @@ const Shop = () => {
   
   const toggleFilterMenu = () => {
     setIsFilterMenuOpen(!isFilterMenuOpen);
+  };
+
+  // Generate pagination items
+  const renderPaginationItems = () => {
+    const items = [];
+    const maxVisiblePages = 5;
+    
+    // Always show first page
+    items.push(
+      <PaginationItem key="first">
+        <PaginationLink 
+          onClick={() => handlePageChange(1)} 
+          isActive={currentPage === 1}
+        >
+          1
+        </PaginationLink>
+      </PaginationItem>
+    );
+    
+    // Show ellipsis after first page if needed
+    if (currentPage > 3) {
+      items.push(
+        <PaginationItem key="ellipsis-1">
+          <span className="flex h-9 w-9 items-center justify-center">...</span>
+        </PaginationItem>
+      );
+    }
+    
+    // Calculate range of visible page numbers
+    let startPage = Math.max(2, currentPage - 1);
+    let endPage = Math.min(totalPages - 1, currentPage + 1);
+    
+    // Adjust range if at the edges
+    if (currentPage <= 3) {
+      startPage = 2;
+      endPage = Math.min(totalPages - 1, maxVisiblePages - 1);
+    } else if (currentPage >= totalPages - 2) {
+      startPage = Math.max(2, totalPages - (maxVisiblePages - 2));
+      endPage = totalPages - 1;
+    }
+    
+    // Add middle page numbers
+    for (let i = startPage; i <= endPage; i++) {
+      if (i <= 1 || i >= totalPages) continue; // Skip first and last pages (added separately)
+      items.push(
+        <PaginationItem key={i}>
+          <PaginationLink 
+            onClick={() => handlePageChange(i)} 
+            isActive={currentPage === i}
+          >
+            {i}
+          </PaginationLink>
+        </PaginationItem>
+      );
+    }
+    
+    // Show ellipsis before last page if needed
+    if (currentPage < totalPages - 2 && totalPages > 4) {
+      items.push(
+        <PaginationItem key="ellipsis-2">
+          <span className="flex h-9 w-9 items-center justify-center">...</span>
+        </PaginationItem>
+      );
+    }
+    
+    // Always show last page if there is more than one page
+    if (totalPages > 1) {
+      items.push(
+        <PaginationItem key="last">
+          <PaginationLink 
+            onClick={() => handlePageChange(totalPages)} 
+            isActive={currentPage === totalPages}
+          >
+            {totalPages}
+          </PaginationLink>
+        </PaginationItem>
+      );
+    }
+    
+    return items;
   };
 
   return (
@@ -727,7 +646,7 @@ const Shop = () => {
               {/* Results Stats */}
               <div className="flex justify-between items-center mb-6">
                 <p className="text-sm text-mvmt-gray-600">
-                  Showing {products.length} {products.length === 1 ? 'product' : 'products'}
+                  Showing {products.length} of {filteredProducts.length} {filteredProducts.length === 1 ? 'product' : 'products'}
                 </p>
               </div>
               
@@ -747,6 +666,34 @@ const Shop = () => {
                   >
                     Clear Filters
                   </button>
+                </div>
+              )}
+              
+              {/* Pagination */}
+              {filteredProducts.length > productsPerPage && (
+                <div className="mt-12">
+                  <Pagination>
+                    <PaginationContent>
+                      {/* Previous Page Button */}
+                      <PaginationItem>
+                        <PaginationPrevious
+                          onClick={() => currentPage > 1 && handlePageChange(currentPage - 1)}
+                          className={cn(currentPage === 1 ? "pointer-events-none opacity-50" : "")}
+                        />
+                      </PaginationItem>
+                      
+                      {/* Page Numbers */}
+                      {renderPaginationItems()}
+                      
+                      {/* Next Page Button */}
+                      <PaginationItem>
+                        <PaginationNext
+                          onClick={() => currentPage < totalPages && handlePageChange(currentPage + 1)}
+                          className={cn(currentPage === totalPages ? "pointer-events-none opacity-50" : "")}
+                        />
+                      </PaginationItem>
+                    </PaginationContent>
+                  </Pagination>
                 </div>
               )}
             </div>
