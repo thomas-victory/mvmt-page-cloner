@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -8,6 +7,8 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import { useCart } from '@/contexts/CartContext';
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -17,6 +18,7 @@ const Header = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const location = useLocation();
   const navigate = useNavigate();
+  const { itemCount } = useCart();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -78,7 +80,6 @@ const Header = () => {
       )}
     >
       <div className="mvmt-container flex items-center justify-between">
-        {/* Logo */}
         <Link 
           to="/" 
           className="relative z-50 font-bold text-2xl tracking-tight"
@@ -86,7 +87,6 @@ const Header = () => {
           MVMT
         </Link>
 
-        {/* Desktop Navigation */}
         <nav className="hidden lg:flex items-center space-x-8">
           {navLinks.map((link, index) => (
             <div 
@@ -117,7 +117,6 @@ const Header = () => {
                 </span>
               </Link>
 
-              {/* Submenu */}
               {link.submenu && (
                 <div 
                   className={cn(
@@ -144,7 +143,6 @@ const Header = () => {
           ))}
         </nav>
 
-        {/* Desktop Icons */}
         <div className="hidden lg:flex items-center space-x-6">
           <button 
             className="text-mvmt-gray-700 hover:text-mvmt-black transition-colors duration-300"
@@ -169,21 +167,36 @@ const Header = () => {
           </Link>
           <Link 
             to="/cart" 
-            className="text-mvmt-gray-700 hover:text-mvmt-black transition-colors duration-300"
+            className="text-mvmt-gray-700 hover:text-mvmt-black transition-colors duration-300 relative"
             aria-label="Cart"
           >
             <ShoppingBag className="h-5 w-5" />
+            {itemCount > 0 && (
+              <Badge 
+                variant="default" 
+                className="absolute -top-2 -right-2 h-5 w-5 p-0 flex items-center justify-center rounded-full bg-mvmt-accent text-white text-xs"
+              >
+                {itemCount > 99 ? '99+' : itemCount}
+              </Badge>
+            )}
           </Link>
         </div>
 
-        {/* Mobile Menu Toggle */}
         <div className="flex items-center space-x-4 lg:hidden">
           <Link 
             to="/cart" 
-            className="text-mvmt-gray-700 hover:text-mvmt-black transition-colors duration-300"
+            className="text-mvmt-gray-700 hover:text-mvmt-black transition-colors duration-300 relative"
             aria-label="Cart"
           >
             <ShoppingBag className="h-5 w-5" />
+            {itemCount > 0 && (
+              <Badge 
+                variant="default" 
+                className="absolute -top-2 -right-2 h-5 w-5 p-0 flex items-center justify-center rounded-full bg-mvmt-accent text-white text-xs"
+              >
+                {itemCount > 99 ? '99+' : itemCount}
+              </Badge>
+            )}
           </Link>
           <button 
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -198,7 +211,6 @@ const Header = () => {
           </button>
         </div>
 
-        {/* Search Overlay */}
         {isSearchOpen && (
           <div className="fixed inset-0 bg-white/95 backdrop-blur-sm z-50 flex items-start justify-center pt-24 px-4">
             <div className="w-full max-w-3xl">
@@ -232,7 +244,6 @@ const Header = () => {
           </div>
         )}
 
-        {/* Mobile Menu */}
         <div 
           className={cn(
             "fixed inset-0 bg-white z-40 transition-transform duration-400 ease-out-smooth lg:hidden",
