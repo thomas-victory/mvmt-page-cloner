@@ -1,17 +1,22 @@
 
 import { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import { 
   Search, ShoppingBag, User, Menu, X, ChevronDown, 
   Heart 
 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSubmenuOpen, setIsSubmenuOpen] = useState<string | null>(null);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -24,10 +29,19 @@ const Header = () => {
 
   useEffect(() => {
     setIsMobileMenuOpen(false);
+    setIsSearchOpen(false);
   }, [location]);
 
   const toggleSubmenu = (key: string) => {
     setIsSubmenuOpen(isSubmenuOpen === key ? null : key);
+  };
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
+      setIsSearchOpen(false);
+    }
   };
 
   const navLinks = [
@@ -132,28 +146,49 @@ const Header = () => {
 
         {/* Desktop Icons */}
         <div className="hidden lg:flex items-center space-x-6">
-          <button className="text-mvmt-gray-700 hover:text-mvmt-black transition-colors duration-300">
+          <button 
+            className="text-mvmt-gray-700 hover:text-mvmt-black transition-colors duration-300"
+            onClick={() => setIsSearchOpen(!isSearchOpen)}
+            aria-label="Search"
+          >
             <Search className="h-5 w-5" />
           </button>
-          <Link to="/account" className="text-mvmt-gray-700 hover:text-mvmt-black transition-colors duration-300">
+          <Link 
+            to="/account" 
+            className="text-mvmt-gray-700 hover:text-mvmt-black transition-colors duration-300"
+            aria-label="Account"
+          >
             <User className="h-5 w-5" />
           </Link>
-          <Link to="/wishlist" className="text-mvmt-gray-700 hover:text-mvmt-black transition-colors duration-300">
+          <Link 
+            to="/wishlist" 
+            className="text-mvmt-gray-700 hover:text-mvmt-black transition-colors duration-300"
+            aria-label="Wishlist"
+          >
             <Heart className="h-5 w-5" />
           </Link>
-          <Link to="/cart" className="text-mvmt-gray-700 hover:text-mvmt-black transition-colors duration-300">
+          <Link 
+            to="/cart" 
+            className="text-mvmt-gray-700 hover:text-mvmt-black transition-colors duration-300"
+            aria-label="Cart"
+          >
             <ShoppingBag className="h-5 w-5" />
           </Link>
         </div>
 
         {/* Mobile Menu Toggle */}
         <div className="flex items-center space-x-4 lg:hidden">
-          <Link to="/cart" className="text-mvmt-gray-700 hover:text-mvmt-black transition-colors duration-300">
+          <Link 
+            to="/cart" 
+            className="text-mvmt-gray-700 hover:text-mvmt-black transition-colors duration-300"
+            aria-label="Cart"
+          >
             <ShoppingBag className="h-5 w-5" />
           </Link>
           <button 
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="text-mvmt-gray-700 hover:text-mvmt-black transition-colors duration-300"
+            aria-label="Toggle menu"
           >
             {isMobileMenuOpen ? (
               <X className="h-6 w-6" />
@@ -162,6 +197,40 @@ const Header = () => {
             )}
           </button>
         </div>
+
+        {/* Search Overlay */}
+        {isSearchOpen && (
+          <div className="fixed inset-0 bg-white/95 backdrop-blur-sm z-50 flex items-start justify-center pt-24 px-4">
+            <div className="w-full max-w-3xl">
+              <form onSubmit={handleSearch} className="relative">
+                <Input
+                  type="text"
+                  placeholder="Search for products..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="h-12 pr-12 text-lg"
+                  autoFocus
+                />
+                <Button 
+                  type="submit" 
+                  variant="ghost" 
+                  className="absolute right-0 top-0 h-12 aspect-square"
+                  aria-label="Search"
+                >
+                  <Search className="h-5 w-5" />
+                </Button>
+              </form>
+              <Button 
+                variant="ghost" 
+                className="absolute top-8 right-8"
+                onClick={() => setIsSearchOpen(false)}
+                aria-label="Close search"
+              >
+                <X className="h-6 w-6" />
+              </Button>
+            </div>
+          </div>
+        )}
 
         {/* Mobile Menu */}
         <div 
@@ -232,13 +301,16 @@ const Header = () => {
                 <Heart className="h-5 w-5 mr-3" />
                 <span>Wishlist</span>
               </Link>
-              <Link 
-                to="/search" 
-                className="flex items-center py-3 text-mvmt-gray-700 hover:text-mvmt-black"
+              <button 
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  setIsSearchOpen(true);
+                }}
+                className="flex items-center py-3 text-mvmt-gray-700 hover:text-mvmt-black w-full text-left"
               >
                 <Search className="h-5 w-5 mr-3" />
                 <span>Search</span>
-              </Link>
+              </button>
             </div>
           </div>
         </div>

@@ -16,6 +16,8 @@ import Checkout from "./pages/Checkout";
 import Payment from "./pages/Payment";
 import OrderConfirmation from "./pages/OrderConfirmation";
 import NotFound from "./pages/NotFound";
+import Account from "./pages/Account";
+import Wishlist from "./pages/Wishlist";
 
 // Footer Navigation Pages
 import MensSunglasses from "./pages/MensSunglasses";
@@ -58,6 +60,8 @@ const App = () => (
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/payment" element={<Payment />} />
           <Route path="/order-confirmation" element={<OrderConfirmation />} />
+          <Route path="/account" element={<Account />} />
+          <Route path="/wishlist" element={<Wishlist />} />
           
           {/* Footer Navigation Pages */}
           <Route path="/mens-sunglasses" element={<MensSunglasses />} />
