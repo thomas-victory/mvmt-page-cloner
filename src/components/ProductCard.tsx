@@ -1,7 +1,8 @@
+
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { Heart } from 'lucide-react';
+import { Heart, Timer } from 'lucide-react';
 import { Review } from '@/types/Review';
 
 export interface Product {
@@ -16,6 +17,7 @@ export interface Product {
   slug: string;
   colorOptions?: { name: string; color: string }[];
   reviews?: Review[];
+  saleEndsAt?: string; // Added property for sale end time
 }
 
 interface ProductCardProps {
@@ -51,6 +53,11 @@ const ProductCard = ({ product, variant = 'default', detailUrl }: ProductCardPro
         currency: 'USD',
       }).format(product.originalPrice)
     : null;
+    
+  // Calculate discount percentage if there's an original price
+  const discountPercentage = product.originalPrice
+    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+    : 0;
 
   const productUrl = detailUrl || `/product/${product.slug}`;
 
@@ -87,11 +94,19 @@ const ProductCard = ({ product, variant = 'default', detailUrl }: ProductCardPro
                 </span>
               )}
               {product.originalPrice && (
-                <span className="inline-block bg-red-600 text-white text-xs px-2.5 py-1 font-medium">
-                  SALE
+                <span className="inline-flex items-center bg-red-600 text-white text-xs px-2.5 py-1 font-medium">
+                  {discountPercentage > 0 && `SAVE ${discountPercentage}%`}
                 </span>
               )}
             </div>
+            
+            {/* Sale countdown timer indicator */}
+            {product.saleEndsAt && (
+              <div className="absolute bottom-3 left-3 right-3 bg-black/70 backdrop-blur-sm text-white text-xs px-2.5 py-1.5 font-medium flex items-center">
+                <Timer className="h-3.5 w-3.5 mr-1.5" />
+                <span>Limited time offer</span>
+              </div>
+            )}
           </div>
         </Link>
 
@@ -142,12 +157,23 @@ const ProductCard = ({ product, variant = 'default', detailUrl }: ProductCardPro
           </h3>
         </Link>
         <div className="mt-1 flex items-center justify-center gap-2">
-          <span className="text-sm font-medium">
-            {formattedPrice}
-          </span>
-          {formattedOriginalPrice && (
-            <span className="text-sm text-mvmt-gray-500 line-through">
-              {formattedOriginalPrice}
+          {formattedOriginalPrice ? (
+            <>
+              <span className="text-sm font-medium text-red-600">
+                {formattedPrice}
+              </span>
+              <span className="text-sm text-mvmt-gray-500 line-through">
+                {formattedOriginalPrice}
+              </span>
+              {discountPercentage > 0 && (
+                <span className="text-xs bg-red-100 text-red-700 px-1.5 py-0.5 rounded">
+                  -{discountPercentage}%
+                </span>
+              )}
+            </>
+          ) : (
+            <span className="text-sm font-medium">
+              {formattedPrice}
             </span>
           )}
         </div>

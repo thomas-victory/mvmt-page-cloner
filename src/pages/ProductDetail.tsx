@@ -1,6 +1,7 @@
+
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { ChevronRight, Minus, Plus, Heart, ShoppingCart, Star } from "lucide-react";
+import { ChevronRight, Minus, Plus, Heart, ShoppingCart, Star, Timer, BadgePercent } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Product } from "@/components/ProductCard";
@@ -21,6 +22,9 @@ const ProductDetail = () => {
   const [quantity, setQuantity] = useState(1);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
+  
+  // Countdown timer state
+  const [timeLeft, setTimeLeft] = useState<{ hours: number; minutes: number; seconds: number } | null>(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -37,6 +41,31 @@ const ProductDetail = () => {
     
     return () => clearTimeout(timer);
   }, [slug]);
+
+  // Set up countdown timer if product has a saleEndsAt date
+  useEffect(() => {
+    if (!product?.saleEndsAt) return;
+    
+    const calculateTimeLeft = () => {
+      const difference = new Date(product.saleEndsAt!).getTime() - new Date().getTime();
+      
+      if (difference <= 0) {
+        setTimeLeft(null);
+        return;
+      }
+      
+      const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((difference / 1000 / 60) % 60);
+      const seconds = Math.floor((difference / 1000) % 60);
+      
+      setTimeLeft({ hours, minutes, seconds });
+    };
+    
+    calculateTimeLeft();
+    const intervalId = setInterval(calculateTimeLeft, 1000);
+    
+    return () => clearInterval(intervalId);
+  }, [product]);
 
   const incrementQuantity = () => {
     setQuantity(prev => Math.min(prev + 1, 10)); // Limiting to 10 items max
@@ -84,8 +113,20 @@ const ProductDetail = () => {
     const sum = reviews.reduce((total, review) => total + review.rating, 0);
     return (sum / reviews.length).toFixed(1);
   };
+  
+  // Calculate discount percentage if there's an original price
+  const calculateDiscountPercentage = () => {
+    if (!product?.originalPrice) return 0;
+    return Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100);
+  };
 
   const averageRating = calculateAverageRating(product?.reviews);
+  const discountPercentage = calculateDiscountPercentage();
+
+  // Format countdown timer
+  const formatTimeValue = (value: number) => {
+    return value.toString().padStart(2, '0');
+  };
 
   if (loading) {
     return (
@@ -145,12 +186,19 @@ const ProductDetail = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16">
             {/* Product Images */}
             <div className="space-y-4">
-              <div className="aspect-square overflow-hidden bg-mvmt-gray-100">
+              <div className="aspect-square overflow-hidden bg-mvmt-gray-100 relative">
                 <img 
                   src={product.images[activeImageIndex]} 
                   alt={product.name} 
                   className="w-full h-full object-cover"
                 />
+                
+                {/* Sale badge */}
+                {product.originalPrice && (
+                  <div className="absolute top-4 right-4 bg-red-600 text-white text-xs px-2.5 py-1 font-medium">
+                    SAVE {discountPercentage}%
+                  </div>
+                )}
               </div>
               
               {/* Thumbnail Gallery */}
@@ -202,12 +250,40 @@ const ProductDetail = () => {
                 </div>
               )}
               
-              <div className="mt-4 flex items-baseline">
-                <span className="text-xl font-semibold">${product.price}</span>
-                {product.originalPrice && (
-                  <span className="ml-3 text-mvmt-gray-500 line-through">
-                    ${product.originalPrice}
-                  </span>
+              {/* Enhanced Price Display with Sale */}
+              <div className="mt-4">
+                {product.originalPrice ? (
+                  <div className="space-y-1">
+                    <div className="flex items-baseline">
+                      <span className="text-xl font-semibold text-red-600">${product.price}</span>
+                      <span className="ml-3 text-mvmt-gray-500 line-through">
+                        ${product.originalPrice}
+                      </span>
+                      <span className="ml-3 bg-red-100 text-red-700 px-2 py-0.5 text-xs font-medium rounded-sm flex items-center">
+                        <BadgePercent className="h-3.5 w-3.5 mr-1" />
+                        Save {discountPercentage}%
+                      </span>
+                    </div>
+                    
+                    {/* Countdown Timer */}
+                    {timeLeft && (
+                      <div className="flex items-center mt-3 p-3 bg-amber-50 border border-amber-200 rounded-md">
+                        <Timer className="h-5 w-5 text-amber-600 mr-2" />
+                        <div>
+                          <p className="text-sm font-medium text-amber-800">Sale ends in:</p>
+                          <div className="flex items-center space-x-1 mt-1">
+                            <span className="bg-amber-100 text-amber-800 px-2 py-1 rounded text-sm font-mono font-semibold">{formatTimeValue(timeLeft.hours)}</span>
+                            <span className="text-amber-800">:</span>
+                            <span className="bg-amber-100 text-amber-800 px-2 py-1 rounded text-sm font-mono font-semibold">{formatTimeValue(timeLeft.minutes)}</span>
+                            <span className="text-amber-800">:</span>
+                            <span className="bg-amber-100 text-amber-800 px-2 py-1 rounded text-sm font-mono font-semibold">{formatTimeValue(timeLeft.seconds)}</span>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <span className="text-xl font-semibold">${product.price}</span>
                 )}
               </div>
               

@@ -92,6 +92,7 @@ export const productsData: Product[] = [
       { name: "Brown", color: "#8B572A" },
       { name: "Black", color: "#000000" }
     ],
+    saleEndsAt: new Date(new Date().getTime() + 48 * 60 * 60 * 1000).toISOString(),
     reviews: [
       {
         id: "r6",
@@ -190,6 +191,7 @@ export const productsData: Product[] = [
     ],
     category: "women",
     slug: "stellar-diamond",
+    saleEndsAt: new Date(new Date().getTime() + 24 * 60 * 60 * 1000).toISOString(),
     colorOptions: [
       { name: "White", color: "#FFFFFF" },
       { name: "Black", color: "#000000" }
