@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 import { productsData } from "@/data/products";
 
 const Index = () => {
-  const mensWatches = productsData.filter(p => p.category === "men").slice(0, 4);
+  const mensWatches = productsData.filter(p => p.category === "men").slice(0, 8);
   const womensWatches = productsData.filter(p => p.category === "women").slice(0, 4);
   
   useEffect(() => {
