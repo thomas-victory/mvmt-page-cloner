@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -212,7 +213,7 @@ const Header = () => {
         </div>
 
         {isSearchOpen && (
-          <div className="fixed inset-0 bg-white/95 backdrop-blur-sm z-50 flex items-start justify-center pt-24 px-4">
+          <div className="fixed inset-0 glassmorphism z-50 flex items-start justify-center pt-24 px-4 animate-fade-in">
             <div className="w-full max-w-3xl">
               <form onSubmit={handleSearch} className="relative">
                 <Input
@@ -220,21 +221,24 @@ const Header = () => {
                   placeholder="Search for products..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="h-12 pr-12 text-lg"
+                  className="h-12 pr-12 text-lg border-b-2 border-mvmt-black rounded-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
                   autoFocus
                 />
                 <Button 
                   type="submit" 
                   variant="ghost" 
-                  className="absolute right-0 top-0 h-12 aspect-square"
+                  className="absolute right-0 top-0 h-12 aspect-square text-mvmt-black hover:bg-transparent"
                   aria-label="Search"
                 >
                   <Search className="h-5 w-5" />
                 </Button>
               </form>
+              <div className="mt-8 text-center text-mvmt-gray-600">
+                <p className="text-sm">Popular searches: Watches, Sunglasses, Jewelry</p>
+              </div>
               <Button 
                 variant="ghost" 
-                className="absolute top-8 right-8"
+                className="absolute top-8 right-8 text-mvmt-black hover:bg-transparent"
                 onClick={() => setIsSearchOpen(false)}
                 aria-label="Close search"
               >
