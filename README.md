@@ -1,69 +1,104 @@
-# Welcome to your Lovable project
 
-## Project info
+# Vite React Shadcn TypeScript Starter
 
-**URL**: https://lovable.dev/projects/2e4353bf-61f3-4979-81d9-a5af881ff360
+**Author:** VieBest  
+**Version:** 0.0.0  
+**License:** Private  
 
-## How can I edit this code?
+A modern starter template using **Vite**, **React**, **TypeScript**, **shadcn/ui**, and **TailwindCSS**. Built with scalability and performance in mind, integrating Radix UI primitives, React Router, React Query, Zod, and more.
 
-There are several ways of editing your application.
+---
 
-**Use Lovable**
+## ✨ Features
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/2e4353bf-61f3-4979-81d9-a5af881ff360) and start prompting.
+- ⚡ **Vite** for fast bundling and HMR
+- ⚛️ **React 18** with **TypeScript**
+- 🎨 **shadcn/ui** components (powered by **Radix UI** & **TailwindCSS**)
+- 🧩 **React Router v6** for routing
+- 📦 **React Query** for server-state management
+- 🧰 **Zod** + **React Hook Form** for schema validation and form management
+- 📊 **Recharts** for data visualization
+- 🧑‍🎨 Preconfigured with **clsx**, **tailwind-merge**, **tailwindcss-animate**, **next-themes**, and more utilities
+- 🧼 **ESLint** with recommended settings and hooks/plugin support
+- 🚀 Optimized build with production & development mode
 
-Changes made via Lovable will be committed automatically to this repo.
+---
 
-**Use your preferred IDE**
+## 📂 Folder Structure (recommended)
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
-
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
-
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
-
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```
+src/
+├── components/        // UI Components (shadcn + custom)
+├── hooks/             // Custom React Hooks
+├── pages/             // Route-based components
+├── routes/            // React Router setup
+├── services/          // API calls / external services
+├── utils/             // Utilities & helpers
+├── types/             // TypeScript types
+└── App.tsx            // Root component
 ```
 
-**Edit a file directly in GitHub**
+---
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 🛠️ Scripts
 
-**Use GitHub Codespaces**
+| Command          | Description                      |
+| ---------------- | -------------------------------- |
+| `yarn dev`       | Start development server         |
+| `yarn build`     | Build production bundle          |
+| `yarn build:dev` | Build in development mode        |
+| `yarn preview`   | Preview production build locally |
+| `yarn lint`      | Run ESLint to check code quality |
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+---
 
-## What technologies are used for this project?
+## 🚀 Getting Started
 
-This project is built with .
+```bash
+# Clone the repo
+git clone git@github.com:domizhhieuit/e-store.git
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+# Navigate to project directory
+cd e-store
 
-## How can I deploy this project?
+# Install dependencies
+yarn install
 
-Simply open [Lovable](https://lovable.dev/projects/2e4353bf-61f3-4979-81d9-a5af881ff360) and click on Share -> Publish.
+# Start development server
+yarn dev
+```
 
-## I want to use a custom domain - is that possible?
+---
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+## 📚 Dependencies Highlights
+
+- **UI/UX:** shadcn/ui, Radix UI, lucide-react, cmdk, vaul, tailwindcss-animate, sonner (notifications)
+- **Forms:** react-hook-form, @hookform/resolvers, zod, input-otp
+- **Routing:** react-router-dom
+- **State & Data:** @tanstack/react-query, date-fns, react-day-picker
+- **Charts:** recharts
+- **Utilities:** clsx, class-variance-authority, tailwind-merge, next-themes
+
+---
+
+## 🖌️ Styling
+
+Using **TailwindCSS** with additional plugins like:
+
+- `@tailwindcss/typography`
+- `tailwindcss-animate`
+- `tailwind-merge`
+
+---
+
+## 💡 Notes
+
+- This project is private and maintained by **VieBest**.
+- Pre-configured with recommended tooling for a smooth DX.
+- Can be extended easily with additional shadcn components and utilities.
+
+---
+
+## 📞 Contact
+
+For inquiries or support, please reach out to **VieBest**.
