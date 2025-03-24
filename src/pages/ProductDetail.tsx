@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { ChevronRight, Minus, Plus, Heart, ShoppingCart, Star, Timer, BadgePercent } from "lucide-react";
+import { ChevronRight, Minus, Plus, Heart, ShoppingCart, Star, Timer, BadgePercent, Tag } from "lucide-react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Product } from "@/components/ProductCard";
@@ -23,8 +23,9 @@ const ProductDetail = () => {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   
-  // Countdown timer state
+  // Countdown timer state with more granular control for animations
   const [timeLeft, setTimeLeft] = useState<{ hours: number; minutes: number; seconds: number } | null>(null);
+  const [timerFlash, setTimerFlash] = useState(false);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -59,6 +60,12 @@ const ProductDetail = () => {
       const seconds = Math.floor((difference / 1000) % 60);
       
       setTimeLeft({ hours, minutes, seconds });
+      
+      // Flash effect when seconds change
+      if (seconds === 0) {
+        setTimerFlash(true);
+        setTimeout(() => setTimerFlash(false), 500);
+      }
     };
     
     calculateTimeLeft();
@@ -199,6 +206,14 @@ const ProductDetail = () => {
                     SAVE {discountPercentage}%
                   </div>
                 )}
+                
+                {/* Free shipping badge */}
+                {product.freeShipping && (
+                  <div className="absolute top-4 left-4 bg-emerald-100 text-emerald-800 text-xs px-3 py-1 font-medium rounded-full flex items-center shadow-sm transform -rotate-2 animate-pulse-subtle">
+                    <Tag className="h-3.5 w-3.5 mr-1.5" strokeWidth={2.5} />
+                    <span>FREE SHIPPING</span>
+                  </div>
+                )}
               </div>
               
               {/* Thumbnail Gallery */}
@@ -265,20 +280,47 @@ const ProductDetail = () => {
                       </span>
                     </div>
                     
-                    {/* Countdown Timer */}
+                    {/* New Animated Countdown Timer */}
                     {timeLeft && (
-                      <div className="flex items-center mt-3 p-3 bg-amber-50 border border-amber-200 rounded-md">
-                        <Timer className="h-5 w-5 text-amber-600 mr-2" />
-                        <div>
-                          <p className="text-sm font-medium text-amber-800">Sale ends in:</p>
-                          <div className="flex items-center space-x-1 mt-1">
-                            <span className="bg-amber-100 text-amber-800 px-2 py-1 rounded text-sm font-mono font-semibold">{formatTimeValue(timeLeft.hours)}</span>
-                            <span className="text-amber-800">:</span>
-                            <span className="bg-amber-100 text-amber-800 px-2 py-1 rounded text-sm font-mono font-semibold">{formatTimeValue(timeLeft.minutes)}</span>
-                            <span className="text-amber-800">:</span>
-                            <span className="bg-amber-100 text-amber-800 px-2 py-1 rounded text-sm font-mono font-semibold">{formatTimeValue(timeLeft.seconds)}</span>
+                      <div className="mt-4 relative overflow-hidden">
+                        <div className={`p-4 bg-gradient-to-r from-red-50 to-amber-50 border border-amber-200 rounded-md ${timerFlash ? 'animate-pulse' : ''}`}>
+                          <div className="flex items-center">
+                            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-amber-100 text-amber-800">
+                              <Timer className="h-5 w-5" />
+                            </div>
+                            <div className="ml-3">
+                              <h3 className="text-sm font-bold text-amber-800">Limited Time Offer!</h3>
+                              <p className="text-xs text-amber-700 mt-0.5">Sale ends in:</p>
+                            </div>
+                          </div>
+                          
+                          <div className="flex justify-center mt-3 space-x-2">
+                            <div className="flex flex-col items-center">
+                              <div className="bg-white w-14 h-14 rounded-md flex items-center justify-center border border-amber-200 shadow-sm">
+                                <span className="text-2xl font-mono font-bold text-amber-900">{formatTimeValue(timeLeft.hours)}</span>
+                              </div>
+                              <span className="text-xs mt-1 text-amber-800">Hours</span>
+                            </div>
+                            <div className="text-2xl font-bold text-amber-300 self-center pb-5">:</div>
+                            <div className="flex flex-col items-center">
+                              <div className="bg-white w-14 h-14 rounded-md flex items-center justify-center border border-amber-200 shadow-sm">
+                                <span className="text-2xl font-mono font-bold text-amber-900">{formatTimeValue(timeLeft.minutes)}</span>
+                              </div>
+                              <span className="text-xs mt-1 text-amber-800">Minutes</span>
+                            </div>
+                            <div className="text-2xl font-bold text-amber-300 self-center pb-5">:</div>
+                            <div className="flex flex-col items-center">
+                              <div className={`bg-white w-14 h-14 rounded-md flex items-center justify-center border border-amber-200 shadow-sm ${timeLeft.seconds < 10 ? 'animate-pulse' : ''}`}>
+                                <span className="text-2xl font-mono font-bold text-amber-900">{formatTimeValue(timeLeft.seconds)}</span>
+                              </div>
+                              <span className="text-xs mt-1 text-amber-800">Seconds</span>
+                            </div>
                           </div>
                         </div>
+                        
+                        {/* Animated decorative elements */}
+                        <div className="absolute -top-2 -right-2 w-12 h-12 bg-amber-100 rounded-full opacity-20 animate-pulse"></div>
+                        <div className="absolute -bottom-3 -left-3 w-16 h-16 bg-red-100 rounded-full opacity-20 animate-pulse-subtle"></div>
                       </div>
                     )}
                   </div>

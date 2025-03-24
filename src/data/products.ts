@@ -1,3 +1,4 @@
+
 import { Product } from "@/components/ProductCard";
 
 export const productsData: Product[] = [
@@ -12,6 +13,7 @@ export const productsData: Product[] = [
     category: "men",
     isBestseller: true,
     slug: "classic-black",
+    freeShipping: true,
     colorOptions: [
       { name: "Black", color: "#000000" },
       { name: "Silver", color: "#c0c0c0" }
@@ -88,6 +90,7 @@ export const productsData: Product[] = [
     ],
     category: "men",
     slug: "voyager-minimalist",
+    freeShipping: true,
     colorOptions: [
       { name: "Brown", color: "#8B572A" },
       { name: "Black", color: "#000000" }
@@ -157,6 +160,7 @@ export const productsData: Product[] = [
     category: "women",
     isNew: true,
     slug: "luna-mesh",
+    freeShipping: true,
     colorOptions: [
       { name: "Silver", color: "#C0C0C0" },
       { name: "Gold", color: "#D4AF37" }
@@ -225,6 +229,7 @@ export const productsData: Product[] = [
     ],
     category: "men",
     slug: "meridian-chronograph",
+    freeShipping: true,
     colorOptions: [
       { name: "Silver", color: "#C0C0C0" },
       { name: "Black", color: "#000000" }

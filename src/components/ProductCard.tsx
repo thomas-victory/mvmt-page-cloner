@@ -1,7 +1,8 @@
+
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
-import { Heart, Timer } from 'lucide-react';
+import { Heart, Timer, Tag } from 'lucide-react';
 import { Review } from '@/types/Review';
 import { Progress } from '@/components/ui/progress';
 
@@ -18,6 +19,7 @@ export interface Product {
   colorOptions?: { name: string; color: string }[];
   reviews?: Review[];
   saleEndsAt?: string; // Added property for sale end time
+  freeShipping?: boolean; // Added property for free shipping
 }
 
 interface ProductCardProps {
@@ -138,17 +140,22 @@ const ProductCard = ({ product, variant = 'default', detailUrl }: ProductCardPro
                   {discountPercentage > 0 && `SAVE ${discountPercentage}%`}
                 </span>
               )}
+              {product.freeShipping && (
+                <span className="inline-flex items-center bg-emerald-100 text-emerald-800 text-xs px-2 py-1 font-medium rounded shadow-sm animate-pulse-subtle">
+                  <Tag className="h-3 w-3 mr-1" strokeWidth={2.5} /> FREE SHIPPING
+                </span>
+              )}
             </div>
             
-            {/* Sale countdown progress bar */}
+            {/* Sale countdown progress bar - now with animation */}
             {product.saleEndsAt && timeLeft && (
-              <div className="absolute bottom-3 left-3 right-3 bg-black/70 backdrop-blur-sm text-white text-xs px-2.5 py-2 font-medium">
+              <div className="absolute bottom-3 left-3 right-3 bg-black/70 backdrop-blur-sm text-white text-xs px-2.5 py-2 font-medium rounded animate-fade-in">
                 <div className="flex items-center justify-between mb-1.5">
                   <div className="flex items-center">
-                    <Timer className="h-3.5 w-3.5 mr-1.5" />
+                    <Timer className="h-3.5 w-3.5 mr-1.5 animate-pulse" />
                     <span>Sale ends in</span>
                   </div>
-                  <span className="font-mono">{formatTimeLeft()}</span>
+                  <span className="font-mono animate-pulse-subtle">{formatTimeLeft()}</span>
                 </div>
                 <Progress 
                   value={progressValue} 
@@ -168,8 +175,6 @@ const ProductCard = ({ product, variant = 'default', detailUrl }: ProductCardPro
         >
           <Heart className="h-5 w-5 text-mvmt-gray-700 hover:text-red-500 transition-colors duration-300" />
         </button>
-
-        
       </div>
 
       {product.colorOptions && product.colorOptions.length > 0 && (
