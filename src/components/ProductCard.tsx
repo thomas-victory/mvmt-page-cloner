@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -170,18 +169,7 @@ const ProductCard = ({ product, variant = 'default', detailUrl }: ProductCardPro
           <Heart className="h-5 w-5 text-mvmt-gray-700 hover:text-red-500 transition-colors duration-300" />
         </button>
 
-        {variant === 'featured' && (
-          <div 
-            className={cn(
-              "absolute bottom-0 left-0 right-0 bg-white/90 backdrop-blur-sm p-3 transform transition-transform duration-400 ease-out-smooth",
-              isHovering ? "translate-y-0" : "translate-y-full"
-            )}
-          >
-            <button className="w-full py-2.5 bg-mvmt-black text-white text-sm font-medium transition-colors duration-300 hover:bg-mvmt-gray-800">
-              Add to Cart
-            </button>
-          </div>
-        )}
+        
       </div>
 
       {product.colorOptions && product.colorOptions.length > 0 && (
