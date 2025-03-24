@@ -17,12 +17,15 @@ interface CartContextType {
   clearCart: () => void;
   itemCount: number;
   subtotal: number;
+  isCartOpen: boolean;
+  setIsCartOpen: (open: boolean) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [items, setItems] = useState<CartItem[]>([]);
+  const [isCartOpen, setIsCartOpen] = useState(false);
   
   // Load cart from localStorage on mount
   useEffect(() => {
@@ -52,17 +55,13 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         // Update existing item
         const updatedItems = [...prevItems];
         updatedItems[existingItemIndex].quantity += quantity;
-        toast({
-          title: "Cart updated",
-          description: `Updated quantity for ${product.name}`,
-        });
+        // Open cart sheet instead of showing toast
+        setIsCartOpen(true);
         return updatedItems;
       } else {
         // Add new item
-        toast({
-          title: "Added to cart",
-          description: `${product.name} has been added to your cart`,
-        });
+        // Open cart sheet instead of showing toast
+        setIsCartOpen(true);
         return [...prevItems, { product, quantity, selectedColor }];
       }
     });
@@ -115,7 +114,9 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         removeItem, 
         clearCart, 
         itemCount, 
-        subtotal 
+        subtotal,
+        isCartOpen,
+        setIsCartOpen
       }}
     >
       {children}
