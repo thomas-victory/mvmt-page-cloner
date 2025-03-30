@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -206,7 +205,7 @@ const Header = () => {
           <button 
             onClick={toggleMobileMenu}
             className="text-mvmt-gray-700 hover:text-mvmt-black transition-colors duration-300"
-            aria-label="Toggle menu"
+            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
           >
             {isMobileMenuOpen ? (
               <X className="h-6 w-6" />
@@ -259,6 +258,14 @@ const Header = () => {
           )}
         >
           <div className="h-full overflow-y-auto pt-20 pb-6 px-6">
+            <button 
+              onClick={toggleMobileMenu}
+              className="absolute top-6 right-6 text-mvmt-gray-700 hover:text-mvmt-black transition-colors duration-300"
+              aria-label="Close menu"
+            >
+              <X className="h-6 w-6" />
+            </button>
+            
             {navLinks.map((link, index) => (
               <div key={index} className="border-b border-mvmt-gray-100 py-4">
                 {link.submenu ? (
