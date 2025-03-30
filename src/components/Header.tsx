@@ -39,6 +39,10 @@ const Header = () => {
     setIsSubmenuOpen(isSubmenuOpen === key ? null : key);
   };
 
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
@@ -200,7 +204,7 @@ const Header = () => {
             )}
           </Link>
           <button 
-            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            onClick={toggleMobileMenu}
             className="text-mvmt-gray-700 hover:text-mvmt-black transition-colors duration-300"
             aria-label="Toggle menu"
           >
