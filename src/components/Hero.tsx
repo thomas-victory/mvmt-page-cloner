@@ -62,7 +62,7 @@ const Hero = () => {
   }, [currentSlide, isTransitioning]);
 
   return (
-    <div className="relative h-screen w-full overflow-hidden">
+    <div className="relative h-[calc(100vh-4rem)] md:h-screen w-full overflow-hidden">
       {/* Hero Slides */}
       {heroSlides.map((slide, index) => (
         <div
@@ -81,9 +81,11 @@ const Hero = () => {
                 alt={slide.title}
                 className="w-full h-full object-cover animate-image-scale"
                 loading={index === 0 ? "eager" : "lazy"}
+                fetchPriority={index === 0 ? "high" : "auto"}
+                decoding="async"
               />
             </picture>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
           </div>
 
           {/* Content */}
@@ -91,14 +93,14 @@ const Hero = () => {
             <div 
               className={cn(
                 "max-w-md space-y-6 text-white",
-                slide.align === 'left' ? "text-left" : 
-                slide.align === 'right' ? "text-right ml-auto" : 
+                slide.align === 'left' ? "text-left ml-0 md:ml-4" : 
+                slide.align === 'right' ? "text-right ml-auto mr-0 md:mr-4" : 
                 "text-center mx-auto"
               )}
             >
               <h1 
                 className={cn(
-                  "text-4xl md:text-5xl lg:text-6xl font-bold leading-tight opacity-0",
+                  "text-3xl md:text-5xl lg:text-6xl font-bold leading-tight opacity-0",
                   currentSlide === index && "animate-fade-up"
                 )}
                 style={{

@@ -3,6 +3,15 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Font display swap for faster text rendering */
+@font-face {
+  font-family: 'Inter var';
+  font-weight: 100 900;
+  font-display: swap;
+  font-style: normal;
+  src: url('https://rsms.me/inter/font-files/Inter-roman.var.woff2?v=3.19') format('woff2');
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
@@ -72,9 +81,21 @@
     @apply border-border;
   }
 
+  html, body {
+    @apply h-full;
+  }
+
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground font-sans min-h-screen;
     font-feature-settings: "rlig" 1, "calt" 1;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  /* Accessible focus styles */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-mvmt-accent;
   }
 }
 
@@ -82,14 +103,17 @@
   .text-balance {
     text-wrap: balance;
   }
-}
-
-@font-face {
-  font-family: 'Inter var';
-  font-weight: 100 900;
-  font-display: swap;
-  font-style: normal;
-  src: url('https://rsms.me/inter/font-files/Inter-roman.var.woff2?v=3.19') format('woff2');
+  
+  /* Content-visibility for performance */
+  .content-visibility-auto {
+    content-visibility: auto;
+    contain-intrinsic-size: 0 500px;
+  }
+  
+  /* Improve tap targets for mobile */
+  .tap-highlight-transparent {
+    -webkit-tap-highlight-color: transparent;
+  }
 }
 
 /* MVMT Custom Classes */
@@ -157,10 +181,25 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Disable scroll behavior if user prefers reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 /* Improved image rendering */
 img {
   image-rendering: -webkit-optimize-contrast;
   image-rendering: crisp-edges;
+  @apply tap-highlight-transparent;
 }
 
 /* Better box shadows */
@@ -174,4 +213,18 @@ img {
   box-shadow: 0 2px 4px rgba(0,0,0,0.03), 
               0 6px 12px rgba(0,0,0,0.04), 
               0 12px 24px rgba(0,0,0,0.06);
+}
+
+/* Prevent FOUT (Flash of Unstyled Text) */
+.font-loaded body {
+  visibility: visible;
+}
+
+body {
+  visibility: hidden;
+}
+
+/* Display content once it's ready */
+.js-focus-visible :focus:not(.focus-visible) {
+  outline: none;
 }

@@ -1,5 +1,5 @@
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, memo } from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import ProductCard, { Product } from './ProductCard';
@@ -14,6 +14,9 @@ interface FeaturedProductsProps {
   variant?: 'default' | 'carousel';
 }
 
+// Memoize the ProductCard to prevent unnecessary re-renders
+const MemoizedProductCard = memo(ProductCard);
+
 const FeaturedProducts = ({
   title,
   subtitle,
@@ -24,6 +27,7 @@ const FeaturedProducts = ({
   const isMobile = useIsMobile();
   const [activeIndex, setActiveIndex] = useState(0);
   const [visibleProducts, setVisibleProducts] = useState(4);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const carouselRef = useRef<HTMLDivElement>(null);
   
   useEffect(() => {
@@ -41,22 +45,44 @@ const FeaturedProducts = ({
     };
     
     handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    const resizeObserver = new ResizeObserver(handleResize);
+    if (carouselRef.current) {
+      resizeObserver.observe(carouselRef.current);
+    }
+    
+    return () => {
+      if (carouselRef.current) {
+        resizeObserver.unobserve(carouselRef.current);
+      }
+    };
   }, []);
   
   const maxIndex = Math.max(0, products.length - visibleProducts);
   
   const nextSlide = () => {
+    if (isTransitioning) return;
+    
+    setIsTransitioning(true);
     setActiveIndex((current) => 
       current >= maxIndex ? 0 : current + 1
     );
+    
+    setTimeout(() => {
+      setIsTransitioning(false);
+    }, 500);
   };
   
   const prevSlide = () => {
+    if (isTransitioning) return;
+    
+    setIsTransitioning(true);
     setActiveIndex((current) => 
       current === 0 ? maxIndex : current - 1
     );
+    
+    setTimeout(() => {
+      setIsTransitioning(false);
+    }, 500);
   };
   
   return (
@@ -112,7 +138,7 @@ const FeaturedProducts = ({
                     variant === 'carousel' && `w-full sm:w-1/${visibleProducts}`
                   )}
                 >
-                  <ProductCard 
+                  <MemoizedProductCard 
                     product={product}
                     detailUrl={`/product/${product.slug}`}
                     variant={variant === 'carousel' ? 'featured' : 'default'}
@@ -127,14 +153,22 @@ const FeaturedProducts = ({
             <>
               <button
                 onClick={prevSlide}
-                className="absolute left-0 sm:-left-4 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full shadow-md transition-all duration-300 hover:shadow-lg w-10 h-10 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-mvmt-gray-200"
+                disabled={isTransitioning}
+                className={cn(
+                  "absolute left-0 sm:-left-4 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full shadow-md transition-all duration-300 hover:shadow-lg w-10 h-10 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-mvmt-gray-200",
+                  isTransitioning && "opacity-50 cursor-not-allowed"
+                )}
                 aria-label="Previous slide"
               >
                 <ChevronLeft className="h-5 w-5 text-mvmt-gray-800" />
               </button>
               <button
                 onClick={nextSlide}
-                className="absolute right-0 sm:-right-4 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full shadow-md transition-all duration-300 hover:shadow-lg w-10 h-10 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-mvmt-gray-200"
+                disabled={isTransitioning}
+                className={cn(
+                  "absolute right-0 sm:-right-4 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full shadow-md transition-all duration-300 hover:shadow-lg w-10 h-10 flex items-center justify-center focus:outline-none focus:ring-2 focus:ring-mvmt-gray-200",
+                  isTransitioning && "opacity-50 cursor-not-allowed"
+                )}
                 aria-label="Next slide"
               >
                 <ChevronRight className="h-5 w-5 text-mvmt-gray-800" />
@@ -159,12 +193,21 @@ const FeaturedProducts = ({
                   return (
                     <button
                       key={idx}
-                      onClick={() => setActiveIndex(idx)}
-                      className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                      onClick={() => {
+                        if (!isTransitioning) {
+                          setIsTransitioning(true);
+                          setActiveIndex(idx);
+                          setTimeout(() => setIsTransitioning(false), 500);
+                        }
+                      }}
+                      disabled={isTransitioning}
+                      className={cn(
+                        "w-2 h-2 rounded-full transition-all duration-300",
                         activeIndex === idx 
                           ? "bg-mvmt-gray-800 w-4" 
-                          : "bg-mvmt-gray-300"
-                      }`}
+                          : "bg-mvmt-gray-300",
+                        isTransitioning && "opacity-50 cursor-not-allowed"
+                      )}
                       aria-label={`Go to slide ${idx + 1}`}
                     />
                   );
